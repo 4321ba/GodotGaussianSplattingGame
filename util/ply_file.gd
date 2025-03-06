@@ -25,6 +25,26 @@ func get_vertex(index : int) -> Dictionary:
 		vertex[properties[i]] = vertices[start_index + i]
 	return vertex
 
+static func arrayIntersect(a, b) -> Array[StringName]:
+	var intersect: Array[StringName] = []
+	for element in a:
+		if element in b:
+			intersect.append(element)
+	return intersect
+
+static func merge(pc1 : PlyFile, pc2 : PlyFile) -> PlyFile:
+	var merged := PlyFile.new()
+	merged.size = pc1.size + pc2.size
+	merged.properties = arrayIntersect(pc1.properties, pc2.properties)
+	var vtxs = []
+	for pc in [pc1, pc2]:
+		for elem_idx in pc.size:
+			var vtx = pc.get_vertex(elem_idx)
+			for prop in merged.properties:
+				vtxs.append(vtx[prop])
+	merged.vertices = PackedFloat32Array(vtxs)
+	return merged
+
 static func load_gaussian_splats(point_cloud : PlyFile, stride : int, device : RenderingDevice, buffer : RID, should_terminate_reference : Array[bool], num_points_loaded : Array[int], callback : Callable):
 	const STRUCT_SIZE := 60 # floats
 	assert(len(should_terminate_reference) == 1 and len(num_points_loaded) == 1)

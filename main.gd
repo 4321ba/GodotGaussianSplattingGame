@@ -22,12 +22,12 @@ func _init() -> void:
 	DisplayServer.window_set_position(DisplayServer.screen_get_size() * 0.25 / 2.0)
 
 func _ready() -> void:
-	init_rasterizer(DEFAULT_SPLAT_PLY_FILE)
+	init_rasterizer([DEFAULT_SPLAT_PLY_FILE])
 	
 	viewport.size_changed.connect(reset_render_texture)
 	if Engine.is_editor_hint(): return
 	viewport.files_dropped.connect(func(files : PackedStringArray):
-		if files[0].ends_with('.ply'): init_rasterizer(files[0]))
+		if files[0].ends_with('.ply'): init_rasterizer(files))
 	$UpdateDebugTimer.timeout.connect(update_debug_info)
 	$PauseTimer.timeout.connect(update_debug_info)
 
@@ -118,12 +118,20 @@ func update_debug_info() -> void:
 			previous_time = timestamp_time
 		timings[-1] = 'Total GPU Time:  %.2fms' % total_time_ms
 
-func init_rasterizer(ply_file_path : String) -> void:
+func init_rasterizer(ply_file_paths : Array) -> void:
 	if rasterizer: RenderingServer.call_on_render_thread(rasterizer.cleanup_gpu)
 	
+	loaded_file = ""
+	var ply_file = PlyFile.new(ply_file_paths[0])
+	loaded_file += ply_file_paths[0].get_file()
+	for file in ply_file_paths.slice(1):
+		if file.ends_with('.ply'):
+			var next_ply_file = PlyFile.new(file)
+			ply_file = PlyFile.merge(ply_file, next_ply_file)
+			loaded_file += ", " + file.get_file()
+	
 	var render_texture := Texture2DRD.new()
-	rasterizer = GaussianSplattingRasterizer.new(PlyFile.new(ply_file_path), viewport.size, render_texture, camera)
-	loaded_file = ply_file_path.get_file()
+	rasterizer = GaussianSplattingRasterizer.new(ply_file, viewport.size, render_texture, camera)
 	material.set_shader_parameter('render_texture', render_texture)
 	if not Engine.is_editor_hint():
 		camera.reset()
