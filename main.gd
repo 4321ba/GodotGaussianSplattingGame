@@ -2,6 +2,7 @@
 extends Node
 
 const DEFAULT_SPLAT_PLY_FILE := 'res://resources/demo.ply'
+const DEFAULT_SPLAT_PLY_FILE2 := 'res://resources/train.ply'
 
 # Need to use get_singleton because of https://github.com/godotengine/godot/issues/91713
 @onready var viewport : Variant = Engine.get_singleton('EditorInterface').get_editor_viewport_3d(0) if Engine.is_editor_hint() else get_viewport()
@@ -22,7 +23,7 @@ func _init() -> void:
 	DisplayServer.window_set_position(DisplayServer.screen_get_size() * 0.25 / 2.0)
 
 func _ready() -> void:
-	init_rasterizer([DEFAULT_SPLAT_PLY_FILE])
+	init_rasterizer([DEFAULT_SPLAT_PLY_FILE2, DEFAULT_SPLAT_PLY_FILE])
 	
 	viewport.size_changed.connect(reset_render_texture)
 	if Engine.is_editor_hint(): return

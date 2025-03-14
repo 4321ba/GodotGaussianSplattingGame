@@ -35,7 +35,7 @@ struct Splat {
 	float time;
 	float covariance[6]; // Contains top triangle of symmetric matrix
 	float opacity;
-	float _pad;
+	float id;
 	float sh_coefficients[16*3]; // Spherical harmonic coefficients in increasing order
 };
 
@@ -158,6 +158,8 @@ void main() {
 
 	// --- FRUSTUM CULLING ---
 	vec3 splat_pos = splat.position*model_scale;
+	if (splat.id > 0.5)
+		splat_pos.x += cos(time);
 	vec4 view_pos = view_matrix * vec4(splat_pos, 1);
 	vec4 clip_pos = projection_matrix * view_pos;
 	vec2 view_bounds = clip_pos.ww*1.2;

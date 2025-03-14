@@ -3,8 +3,10 @@ class_name PlyFile extends Resource
 var size : int
 var vertices : PackedFloat32Array
 var properties : Array[StringName]
+var split : int
 
 func _init(path:='') -> void:
+	split = 0
 	if not path.is_empty(): parse(path)
 
 func parse(path : String) -> void:
@@ -25,24 +27,14 @@ func get_vertex(index : int) -> Dictionary:
 		vertex[properties[i]] = vertices[start_index + i]
 	return vertex
 
-static func arrayIntersect(a, b) -> Array[StringName]:
-	var intersect: Array[StringName] = []
-	for element in a:
-		if element in b:
-			intersect.append(element)
-	return intersect
-
 static func merge(pc1 : PlyFile, pc2 : PlyFile) -> PlyFile:
 	var merged := PlyFile.new()
 	merged.size = pc1.size + pc2.size
-	merged.properties = arrayIntersect(pc1.properties, pc2.properties)
-	var vtxs = []
-	for pc in [pc1, pc2]:
-		for elem_idx in pc.size:
-			var vtx = pc.get_vertex(elem_idx)
-			for prop in merged.properties:
-				vtxs.append(vtx[prop])
-	merged.vertices = PackedFloat32Array(vtxs)
+	assert(pc1.properties.hash() == pc2.properties.hash())
+	merged.properties = pc1.properties
+	merged.vertices = PackedFloat32Array(pc1.vertices)
+	merged.vertices.append_array(pc2.vertices)
+	merged.split = pc1.vertices.size()
 	return merged
 
 static func load_gaussian_splats(point_cloud : PlyFile, stride : int, device : RenderingDevice, buffer : RID, should_terminate_reference : Array[bool], num_points_loaded : Array[int], callback : Callable):
@@ -80,6 +72,9 @@ static func load_gaussian_splats(point_cloud : PlyFile, stride : int, device : R
 			
 			### Opacity ###
 			points[b+6+4] = 1.0 / (1.0 + exp(-p[v+54]))
+			
+			### ID for differenciating between objects ###
+			points[b+11] = 1 if v >= point_cloud.split else 0
 			
 			### Spherical Harmonic Coefficients ###
 			for k in range(3): points[b+k+12] = p[v+k+6]
