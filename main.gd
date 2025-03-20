@@ -155,6 +155,9 @@ func _process(delta: float) -> void:
 	var has_camera_updated := rasterizer.update_camera_matrices()
 	if not rasterizer.is_loaded or has_camera_updated: 
 		$PauseTimer.start()
+	
+	$BonsaiPath/PathFollow3D.progress_ratio+=delta/4
+	rasterizer.update_object_transforms([Transform3D.IDENTITY, $BonsaiPath/PathFollow3D.transform])
 		
 	var is_paused : bool = $PauseTimer.is_stopped() and should_allow_render_pause[0]
 	Engine.max_fps = 30 if is_paused else 0

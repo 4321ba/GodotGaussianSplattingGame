@@ -21,6 +21,7 @@ var camera : Camera3D
 var camera_projection : Projection
 var camera_transform : Projection
 var camera_push_constants : PackedByteArray
+var object_transforms : Array[Transform3D]
 
 var tile_dims := Vector2i.ZERO
 var texture_size : Vector2i :
@@ -82,6 +83,7 @@ func init_gpu() -> void:
 	
 	descriptors['splats'] = context.create_storage_buffer(point_cloud.size * 60*4)
 	descriptors['uniforms'] = context.create_uniform_buffer(8*4)
+	descriptors['transforms'] = context.create_uniform_buffer(16*8*4)
 	descriptors['culled_splats'] = context.create_storage_buffer(point_cloud.size * 12*4)
 	descriptors['grid_dimensions'] = context.create_storage_buffer(2*3*4, block_dims.to_byte_array(), RenderingDevice.STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT)
 	descriptors['histogram'] = context.create_storage_buffer(4 + (1 + 4*RADIX + num_partitions*RADIX)*4)
@@ -91,7 +93,7 @@ func init_gpu() -> void:
 	descriptors['tile_splat_pos'] = context.create_storage_buffer(4*4)
 	descriptors['render_texture'] = context.create_texture(texture_size, RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT)
 	
-	var projection_set := context.create_descriptor_set([descriptors['splats'], descriptors['culled_splats'], descriptors['histogram'], descriptors['sort_keys'], descriptors['sort_values'], descriptors['grid_dimensions'], descriptors['uniforms']], projection_shader, 0)
+	var projection_set := context.create_descriptor_set([descriptors['splats'], descriptors['culled_splats'], descriptors['histogram'], descriptors['sort_keys'], descriptors['sort_values'], descriptors['grid_dimensions'], descriptors['uniforms'], descriptors['transforms']], projection_shader, 0)
 	var radix_sort_upsweep_set := context.create_descriptor_set([descriptors['histogram'], descriptors['sort_keys']], radix_sort_upsweep_shader, 0)
 	var radix_sort_spine_set := context.create_descriptor_set([descriptors['histogram']], radix_sort_spine_shader, 0)
 	var radix_sort_downsweep_set := context.create_descriptor_set([descriptors['histogram'], descriptors['sort_keys'], descriptors['sort_values']], radix_sort_downsweep_shader, 0)
@@ -124,6 +126,7 @@ func rasterize() -> void:
 	
 	var camera_pos := basis_override * camera.global_position
 	context.device.buffer_update(descriptors['uniforms'].rid, 0, 8*4, RenderingContext.create_push_constant([-camera_pos.x, -camera_pos.y, camera_pos.z, model_scale[0], texture_size.x, texture_size.y, Time.get_ticks_msec()*1e-3]))
+	context.device.buffer_update(descriptors['transforms'].rid, 0, 16*8*4, get_transforms())
 	context.device.buffer_clear(descriptors['histogram'].rid, 0, 4 + 4*RADIX*4) # Clear the sort buffer size and reset global histogram
 	context.device.buffer_clear(descriptors['tile_bounds'].rid, 0, tile_dims.x*tile_dims.y * 2*4) # Clear gsplat_boundaries buffer
 	#context.device.buffer_update(descriptors['grid_dimensions'].rid, 0, 3*4*2, default_block_dims)
@@ -193,3 +196,30 @@ func update_camera_matrices() -> bool:
 			proj.w[0], proj.w[1], proj.w[2], 0.0 ])
 		return true
 	return false
+
+func update_object_transforms(transforms: Array[Transform3D]) -> void:
+	object_transforms = transforms
+
+func get_transforms() -> PackedByteArray:
+	var fbuf := PackedFloat32Array()
+	var I := Projection.IDENTITY
+	#var first := Projection.IDENTITY#Projection(Transform3D(Basis.IDENTITY, Vector3(0, 0, -sin(Time.get_ticks_msec()*1e-3))))
+	#var second := Projection(Transform3D(Basis.IDENTITY, Vector3(0, 0, sin(Time.get_ticks_msec()*1e-3))))
+	#var second := Projection(get_tree().get_current_scene().get_node("/root/Main/BonsaiPath/PathFollow3D").transform)
+	assert(len(object_transforms) <= 8)
+	var t := []
+	for i in object_transforms:
+		t.append(Projection(i))
+	for i in (8 - len(object_transforms)):
+		t.append(I)
+	for i in 8:
+		fbuf.append_array([	t[i].x[0], t[i].x[1], t[i].x[2], t[i].x[3],
+							t[i].y[0], t[i].y[1], t[i].y[2], t[i].y[3],
+							t[i].z[0], t[i].z[1], t[i].z[2], t[i].z[3],
+							t[i].w[0], t[i].w[1], t[i].w[2], t[i].w[3]])
+	var bytebuf := PackedByteArray()
+	bytebuf.resize(4 * fbuf.size())
+	bytebuf.fill(0)
+	for i in range(len(fbuf)):
+		bytebuf.encode_float(i*4, fbuf[i])
+	return bytebuf

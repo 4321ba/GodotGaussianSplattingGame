@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dx4r13gqfh13"]
+[gd_scene load_steps=12 format=3 uid="uid://dx4r13gqfh13"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_skarq"]
 [ext_resource type="Shader" path="res://resources/shaders/spatial/main.gdshader" id="3_jj7ax"]
@@ -23,12 +23,19 @@ grow_amount = 0.1
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="Texture2DRD" id="Texture2DRD_mu3qp"]
+[sub_resource type="Texture2DRD" id="Texture2DRD_5s4vf"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_may5e"]
 render_priority = 0
 shader = ExtResource("3_jj7ax")
-shader_parameter/render_texture = SubResource("Texture2DRD_mu3qp")
+shader_parameter/render_texture = SubResource("Texture2DRD_5s4vf")
+
+[sub_resource type="Curve3D" id="Curve3D_3xwfn"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 1, 1, 1, 0, 0, 3, 1, 1, 1, -1, -1, -1, 1.384, 0, 3, 1, 0, 0, -1, 0, 0, 1, -1, 1, 0, -3, 0, 0, 3, 0, 2, 0, 2, -1, -1, -1, 0, 0, 0, 0, 0, 3),
+"tilts": PackedFloat32Array(0, 0, 0, 1, 0)
+}
+point_count = 5
 
 [node name="Main" type="Node"]
 script = ExtResource("1_skarq")
@@ -75,3 +82,10 @@ offset_right = 2560.0
 offset_bottom = 5.0
 color = Color(1, 1, 1, 0)
 script = ExtResource("5_35jmb")
+
+[node name="BonsaiPath" type="Path3D" parent="."]
+curve = SubResource("Curve3D_3xwfn")
+
+[node name="PathFollow3D" type="PathFollow3D" parent="BonsaiPath"]
+transform = Transform3D(0.761278, 0.562053, 0.323288, -0.603847, 0.432944, 0.669248, 0.236191, -0.704714, 0.668998, 1.67836, 0.377321, 3.37732)
+progress = 2.54756

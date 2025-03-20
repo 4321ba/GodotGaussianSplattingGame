@@ -3,10 +3,10 @@ class_name PlyFile extends Resource
 var size : int
 var vertices : PackedFloat32Array
 var properties : Array[StringName]
-var split : int
+var split : Array[int]
 
 func _init(path:='') -> void:
-	split = 0
+	split = []
 	if not path.is_empty(): parse(path)
 
 func parse(path : String) -> void:
@@ -34,7 +34,7 @@ static func merge(pc1 : PlyFile, pc2 : PlyFile) -> PlyFile:
 	merged.properties = pc1.properties
 	merged.vertices = PackedFloat32Array(pc1.vertices)
 	merged.vertices.append_array(pc2.vertices)
-	merged.split = pc1.vertices.size()
+	merged.split.append(pc1.vertices.size())
 	return merged
 
 static func load_gaussian_splats(point_cloud : PlyFile, stride : int, device : RenderingDevice, buffer : RID, should_terminate_reference : Array[bool], num_points_loaded : Array[int], callback : Callable):
@@ -74,7 +74,10 @@ static func load_gaussian_splats(point_cloud : PlyFile, stride : int, device : R
 			points[b+6+4] = 1.0 / (1.0 + exp(-p[v+54]))
 			
 			### ID for differenciating between objects ###
-			points[b+11] = 1 if v >= point_cloud.split else 0
+			points[b+11] = 0
+			for k in point_cloud.split:
+				if v >= k:
+					points[b+11] += 1
 			
 			### Spherical Harmonic Coefficients ###
 			for k in range(3): points[b+k+12] = p[v+k+6]

@@ -79,6 +79,10 @@ layout (std140, set = 0, binding = 6) restrict uniform Uniforms {
 	float time;
 };
 
+layout (std140, set = 0, binding = 7) restrict uniform Transforms {
+	mat4 transforms[8];
+};
+
 layout(push_constant) restrict readonly uniform PushConstants {
 	mat4 view_matrix;
 	mat4 projection_matrix;
@@ -158,9 +162,7 @@ void main() {
 
 	// --- FRUSTUM CULLING ---
 	vec3 splat_pos = splat.position*model_scale;
-	if (splat.id > 0.5)
-		splat_pos.x += cos(time);
-	vec4 view_pos = view_matrix * vec4(splat_pos, 1);
+	vec4 view_pos = view_matrix * transforms[int(splat.id)] * vec4(splat_pos, 1);
 	vec4 clip_pos = projection_matrix * view_pos;
 	vec2 view_bounds = clip_pos.ww*1.2;
 	if (any(lessThan(clip_pos.xyz, vec3(-view_bounds, 0.0))) || any(greaterThan(clip_pos.xyz, vec3(view_bounds, clip_pos.w)))) {
