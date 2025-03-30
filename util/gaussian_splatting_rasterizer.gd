@@ -209,14 +209,17 @@ func get_transforms() -> PackedByteArray:
 	assert(len(object_transforms) <= 8)
 	var t := []
 	for i in object_transforms:
+		#i.origin.x = -i.origin.x
+		#i.origin.y = -i.origin.y
 		t.append(Projection(i))
 	for i in (8 - len(object_transforms)):
 		t.append(I)
 	for i in 8:
-		fbuf.append_array([	t[i].x[0], t[i].x[1], t[i].x[2], t[i].x[3],
-							t[i].y[0], t[i].y[1], t[i].y[2], t[i].y[3],
-							t[i].z[0], t[i].z[1], t[i].z[2], t[i].z[3],
-							t[i].w[0], t[i].w[1], t[i].w[2], t[i].w[3]])
+		# I have no idea why the minus signs are needed, but they are needed for the intended transformation 
+		fbuf.append_array([	t[i].x[0], t[i].x[1], -t[i].x[2], -t[i].x[3],
+							t[i].y[0], t[i].y[1], -t[i].y[2], -t[i].y[3],
+							-t[i].z[0], -t[i].z[1], t[i].z[2], t[i].z[3],
+							-t[i].w[0], -t[i].w[1], t[i].w[2], t[i].w[3]])
 	var bytebuf := PackedByteArray()
 	bytebuf.resize(4 * fbuf.size())
 	bytebuf.fill(0)

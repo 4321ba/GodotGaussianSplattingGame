@@ -1,7 +1,7 @@
 @tool
 extends Node
 
-const DEFAULT_SPLAT_PLY_FILE := 'res://resources/demo.ply'
+const DEFAULT_SPLAT_PLY_FILE := 'res://resources/demo_centered.ply'
 const DEFAULT_SPLAT_PLY_FILE2 := 'res://resources/train.ply'
 
 # Need to use get_singleton because of https://github.com/godotengine/godot/issues/91713
@@ -16,14 +16,22 @@ var num_rendered_splats := '0'
 var video_memory_used := '0.00MB'
 var timings : PackedStringArray
 var should_render_imgui := true
-var should_allow_render_pause := [true]
+var should_allow_render_pause := [false]
+
+var splat_meshes : Array[SplatMesh] = []
 
 func _init() -> void:
 	DisplayServer.window_set_size(DisplayServer.screen_get_size() * 0.75)
 	DisplayServer.window_set_position(DisplayServer.screen_get_size() * 0.25 / 2.0)
 
 func _ready() -> void:
-	init_rasterizer([DEFAULT_SPLAT_PLY_FILE2, DEFAULT_SPLAT_PLY_FILE])
+	find_by_method(self, StringName("is_splat_mesh"), splat_meshes)
+	assert(len(splat_meshes) <= 8)
+	var splat_filenames := []
+	for m in splat_meshes:
+		splat_filenames.append(m.ply_file)
+	
+	init_rasterizer(splat_filenames)
 	
 	viewport.size_changed.connect(reset_render_texture)
 	if Engine.is_editor_hint(): return
@@ -31,6 +39,12 @@ func _ready() -> void:
 		if files[0].ends_with('.ply'): init_rasterizer(files))
 	$UpdateDebugTimer.timeout.connect(update_debug_info)
 	$PauseTimer.timeout.connect(update_debug_info)
+
+func find_by_method(node: Node, method_name : StringName, result : Array) -> void:
+	if node.has_method(method_name) :
+		result.push_back(node)
+	for child in node.get_children():
+		find_by_method(child, method_name, result)
 
 func _render_imgui() -> void:
 	var fps := Engine.get_frames_per_second()
@@ -156,8 +170,13 @@ func _process(delta: float) -> void:
 	if not rasterizer.is_loaded or has_camera_updated: 
 		$PauseTimer.start()
 	
-	$BonsaiPath/PathFollow3D.progress_ratio+=delta/4
-	rasterizer.update_object_transforms([Transform3D.IDENTITY, $BonsaiPath/PathFollow3D.transform])
+	#temp
+	$BonsaiPath/PathFollow3D.progress_ratio+=delta/10
+	
+	var splat_transforms : Array[Transform3D] = []
+	for m in splat_meshes:
+		splat_transforms.append(m.global_transform)
+	rasterizer.update_object_transforms(splat_transforms)
 		
 	var is_paused : bool = $PauseTimer.is_stopped() and should_allow_render_pause[0]
 	Engine.max_fps = 30 if is_paused else 0

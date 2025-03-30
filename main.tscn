@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://dx4r13gqfh13"]
+[gd_scene load_steps=15 format=3 uid="uid://dx4r13gqfh13"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_skarq"]
 [ext_resource type="Shader" path="res://resources/shaders/spatial/main.gdshader" id="3_jj7ax"]
 [ext_resource type="Script" path="res://util/camera.gd" id="3_rvimx"]
 [ext_resource type="Script" path="res://util/cursor.gd" id="4_gf8y8"]
 [ext_resource type="Script" path="res://util/loading_bar.gd" id="5_35jmb"]
+[ext_resource type="Script" path="res://util/splat_mesh.gd" id="6_bb1q7"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_n8l1u"]
 radius = 0.025
@@ -23,12 +24,12 @@ grow_amount = 0.1
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="Texture2DRD" id="Texture2DRD_5s4vf"]
+[sub_resource type="Texture2DRD" id="Texture2DRD_43jt2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_may5e"]
 render_priority = 0
 shader = ExtResource("3_jj7ax")
-shader_parameter/render_texture = SubResource("Texture2DRD_5s4vf")
+shader_parameter/render_texture = SubResource("Texture2DRD_43jt2")
 
 [sub_resource type="Curve3D" id="Curve3D_3xwfn"]
 _data = {
@@ -36,6 +37,10 @@ _data = {
 "tilts": PackedFloat32Array(0, 0, 0, 1, 0)
 }
 point_count = 5
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ak0y6"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ipik3"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_skarq")
@@ -87,5 +92,21 @@ script = ExtResource("5_35jmb")
 curve = SubResource("Curve3D_3xwfn")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="BonsaiPath"]
-transform = Transform3D(0.761278, 0.562053, 0.323288, -0.603847, 0.432944, 0.669248, 0.236191, -0.704714, 0.668998, 1.67836, 0.377321, 3.37732)
-progress = 2.54756
+transform = Transform3D(-0.041588, 0.991657, -0.121012, 0.0672524, -0.118062, -0.990612, -0.99675, -0.0493413, -0.0617892, 1.96691, -0.605578, 1.98323)
+progress = 8.57536
+
+[node name="SplatMesh" type="Node3D" parent="BonsaiPath/PathFollow3D"]
+script = ExtResource("6_bb1q7")
+ply_file = "res://resources/demo_centered.ply"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BonsaiPath/PathFollow3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_ak0y6")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="BonsaiPath/PathFollow3D"]
+transform = Transform3D(-2.18556e-08, -0.999995, 0, 0.499998, -4.37112e-08, 0, 0, 0, 0.500004, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_ipik3")
+
+[node name="SplatMesh" type="Node3D" parent="."]
+script = ExtResource("6_bb1q7")
+ply_file = "res://resources/train.ply"

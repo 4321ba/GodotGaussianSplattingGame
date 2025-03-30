@@ -162,7 +162,7 @@ void main() {
 
 	// --- FRUSTUM CULLING ---
 	vec3 splat_pos = splat.position*model_scale;
-	vec4 view_pos = view_matrix * transforms[int(splat.id)] * vec4(splat_pos, 1);
+	vec4 view_pos = view_matrix * transforms[int(splat.id + 0.5)] * vec4(splat_pos, 1);
 	vec4 clip_pos = projection_matrix * view_pos;
 	vec2 view_bounds = clip_pos.ww*1.2;
 	if (any(lessThan(clip_pos.xyz, vec3(-view_bounds, 0.0))) || any(greaterThan(clip_pos.xyz, vec3(view_bounds, clip_pos.w)))) {
