@@ -40,6 +40,7 @@ func _ready() -> void:
 	$UpdateDebugTimer.timeout.connect(update_debug_info)
 	$PauseTimer.timeout.connect(update_debug_info)
 
+# source: https://forum.godotengine.org/t/how-do-you-get-all-nodes-of-a-certain-class/9143
 func find_by_method(node: Node, method_name : StringName, result : Array) -> void:
 	if node.has_method(method_name) :
 		result.push_back(node)

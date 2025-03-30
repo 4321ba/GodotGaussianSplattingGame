@@ -24,12 +24,12 @@ grow_amount = 0.1
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="Texture2DRD" id="Texture2DRD_43jt2"]
+[sub_resource type="Texture2DRD" id="Texture2DRD_88a4c"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_may5e"]
 render_priority = 0
 shader = ExtResource("3_jj7ax")
-shader_parameter/render_texture = SubResource("Texture2DRD_43jt2")
+shader_parameter/render_texture = SubResource("Texture2DRD_88a4c")
 
 [sub_resource type="Curve3D" id="Curve3D_3xwfn"]
 _data = {
@@ -92,12 +92,12 @@ script = ExtResource("5_35jmb")
 curve = SubResource("Curve3D_3xwfn")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="BonsaiPath"]
-transform = Transform3D(-0.041588, 0.991657, -0.121012, 0.0672524, -0.118062, -0.990612, -0.99675, -0.0493413, -0.0617892, 1.96691, -0.605578, 1.98323)
-progress = 8.57536
+transform = Transform3D(-0.712818, -0.403813, -0.573241, -0.00984318, 0.823103, -0.567601, 0.701126, -0.398991, -0.590769, -0.00709252, -0.00689759, 2.99231)
+progress = 13.3437
 
 [node name="SplatMesh" type="Node3D" parent="BonsaiPath/PathFollow3D"]
 script = ExtResource("6_bb1q7")
-ply_file = "res://resources/demo_centered.ply"
+ply_file = "res://resources/truck_cut_2.ply"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="BonsaiPath/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)

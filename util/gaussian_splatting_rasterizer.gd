@@ -202,18 +202,12 @@ func update_object_transforms(transforms: Array[Transform3D]) -> void:
 
 func get_transforms() -> PackedByteArray:
 	var fbuf := PackedFloat32Array()
-	var I := Projection.IDENTITY
-	#var first := Projection.IDENTITY#Projection(Transform3D(Basis.IDENTITY, Vector3(0, 0, -sin(Time.get_ticks_msec()*1e-3))))
-	#var second := Projection(Transform3D(Basis.IDENTITY, Vector3(0, 0, sin(Time.get_ticks_msec()*1e-3))))
-	#var second := Projection(get_tree().get_current_scene().get_node("/root/Main/BonsaiPath/PathFollow3D").transform)
 	assert(len(object_transforms) <= 8)
 	var t := []
 	for i in object_transforms:
-		#i.origin.x = -i.origin.x
-		#i.origin.y = -i.origin.y
 		t.append(Projection(i))
 	for i in (8 - len(object_transforms)):
-		t.append(I)
+		t.append(Projection.IDENTITY)
 	for i in 8:
 		# I have no idea why the minus signs are needed, but they are needed for the intended transformation 
 		fbuf.append_array([	t[i].x[0], t[i].x[1], -t[i].x[2], -t[i].x[3],

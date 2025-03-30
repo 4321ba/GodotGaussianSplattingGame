@@ -177,7 +177,10 @@ void main() {
 	float splat_opacity = splat.opacity * time_factor_late*time_factor_late;
 	float splat_scale = model_scale * mix(2.0, 1.0, time_factor_late);
 
-	const vec3 covariance = project_covariance(DECODE_COVARIANCE(splat.covariance), splat_scale, view_pos.xyz, dims);
+	mat3 curr_transform = mat3(transforms[int(splat.id + 0.5)]);
+	mat3 cov_mx = curr_transform * DECODE_COVARIANCE(splat.covariance) * transpose(curr_transform);
+	//mat3 cov_mx = DECODE_COVARIANCE(splat.covariance);
+	const vec3 covariance = project_covariance(cov_mx, splat_scale, view_pos.xyz, dims);
 	float det = covariance.x*covariance.z - covariance.y*covariance.y;
 	if (det == 0.0) return;
 
