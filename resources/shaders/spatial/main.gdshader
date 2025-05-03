@@ -11,9 +11,10 @@ vec3 srgb_to_linear(vec3 x) {
 }
 
 void vertex() {
-	POSITION = vec4(VERTEX.xy, 0.00000001, 1.0);
+	POSITION = vec4(VERTEX.xy, 0.0, 1.0);
 }
 
 void fragment() {
 	ALBEDO = srgb_to_linear(texture(render_texture, SCREEN_UV).rgb);
+	DEPTH = texture(render_texture, SCREEN_UV).a;//0.00000001;
 }

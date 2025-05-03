@@ -45,6 +45,7 @@ layout(push_constant) restrict readonly uniform PushConstants {
 shared vec3[WORKGROUP_SIZE] conic_tile;
 shared vec4[WORKGROUP_SIZE] color_tile;
 shared vec2[WORKGROUP_SIZE] image_pos_tile;
+shared float[WORKGROUP_SIZE] pos_z_tile;
 shared uint shared_t;
 
 void main() {
@@ -62,6 +63,9 @@ void main() {
     const int num_iterations = int(ceil(num_splats / float(WORKGROUP_SIZE)));
 
     vec3 blended_color = vec3(0.0); //imageLoad(rasterized_image, ivec2(image_pos)).rgb;
+    float weighted_depth = 0.0;
+    float min_depth = 0.0;
+    float total_weight = 0.0;
     float t = 1.0;
     for (uint i = 0; i < num_iterations && shared_t > MIN_FACTOR; ++i) {
         const uint sort_offset = WORKGROUP_SIZE*i;
@@ -73,12 +77,14 @@ void main() {
         conic_tile[id_local] = data.conic;
         color_tile[id_local] = data.color;
         image_pos_tile[id_local] = data.image_pos;
+        pos_z_tile[id_local] = data.pos_z;
         shared_t = 0; // Reset shared alpha
         barrier();
 
         for (uint j = 0; j < chunk_size && t > MIN_ALPHA; ++j) {
             vec3 conic = conic_tile[j];
             vec4 color = color_tile[j];
+            float pos_z = pos_z_tile[j];
             vec2 offset = image_pos_tile[j] - image_pos;
             
             float power = -0.5 * (conic.x * offset.x*offset.x + conic.z * offset.y*offset.y) - conic.y * offset.x*offset.y;
@@ -87,6 +93,17 @@ void main() {
             // if (alpha < MIN_ALPHA) continue;
 
             blended_color += color.rgb * alpha * t;
+            if (alpha > 0.2) {
+                weighted_depth += (1.0 - pos_z) * alpha * t;
+                //weighted_depth += pos_z * alpha * t;
+                total_weight += alpha * t;
+            }
+            if (alpha > 0.5 && pos_z > 0.0 && pos_z < 1.0) {
+                //if (id_block == uvec2(3,3))
+                    min_depth = max(min_depth, (1.0 - pos_z));
+                //else
+                //    min_depth = 0.0;//max(min_depth, (1.0 - 0.5));
+            }
             t *= (1.0 - alpha);
         }
 
@@ -98,7 +115,11 @@ void main() {
         barrier();
     }
     vec3 heatmap_color = mix(vec3(0,0,1), vec3(1,0.2,0.2), num_splats*5e-4) * (1.0 - t) * heatmap_factor;
-	imageStore(rasterized_image, ivec2(image_pos), vec4(blended_color + heatmap_color, 1.0));
+    float final_depth = total_weight > 0.0 ? (weighted_depth / total_weight) : 0.0;
+    //float final_depth = min_depth;
+	//imageStore(rasterized_image, ivec2(image_pos), vec4(blended_color + heatmap_color, 0.000000001));
+	imageStore(rasterized_image, ivec2(image_pos), vec4(blended_color + heatmap_color, final_depth));
+	//imageStore(rasterized_image, ivec2(image_pos), vec4(vec3(final_depth), 1.0));
 
     // Used for when the user selects a tile to move the cursor to. This is not as accurate as checking
     // for the closest splat in the cursor position, but it is much faster.

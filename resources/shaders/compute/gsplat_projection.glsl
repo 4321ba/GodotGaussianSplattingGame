@@ -162,7 +162,7 @@ void main() {
 
 	// --- FRUSTUM CULLING ---
 	vec3 splat_pos = splat.position*model_scale;
-	vec4 view_pos = view_matrix * transforms[int(splat.id + 0.5)] * vec4(splat_pos, 1);
+	vec4 view_pos = view_matrix * transforms[int(splat.id + 0.5)] * vec4(splat_pos, 1.0);
 	vec4 clip_pos = projection_matrix * view_pos;
 	vec2 view_bounds = clip_pos.ww*1.2;
 	if (any(lessThan(clip_pos.xyz, vec3(-view_bounds, 0.0))) || any(greaterThan(clip_pos.xyz, vec3(view_bounds, clip_pos.w)))) {
@@ -209,7 +209,18 @@ void main() {
 	data.conic = vec3(covariance.z, -covariance.y, covariance.x) / det; // Inverse 2D covariance
 	data.color = vec4(get_color(view_dir, splat.sh_coefficients), splat_opacity);
 	data.pos_xy = splat_pos.xy;
-	data.pos_z = splat_pos.z;
+	//data.pos_z = splat_pos.z;
+	//data.pos_z = view_pos.z;
+	//data.pos_z = clip_pos.z;// / clip_pos.w;
+	//data.pos_z = (ndc_pos.z + 1.0)*0.5; // 0..1 or -1..1 ??
+	data.pos_z = ndc_pos.z;
+	//data.pos_z = 0.5;
+	
+	//if (ndc_pos.z > 1.0 || ndc_pos.z < 0.1)
+	//	data.pos_z = 1.0;
+	//else
+	//	data.pos_z = ndc_pos.z;
+	
 	culled_buffer[id] = data;
 	barrier();
 
