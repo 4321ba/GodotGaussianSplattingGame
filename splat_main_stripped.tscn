@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=3 uid="uid://du1jbshrl48sj"]
+
+[ext_resource type="Script" path="res://splat_main_stripped.gd" id="1_o4jym"]
+[ext_resource type="Shader" path="res://resources/shaders/spatial/main.gdshader" id="4_53waj"]
+[ext_resource type="Script" path="res://util/loading_bar.gd" id="5_1a6uf"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_ugp31"]
+flip_faces = true
+size = Vector2(2, 2)
+
+[sub_resource type="Texture2DRD" id="Texture2DRD_neu03"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_may5e"]
+render_priority = 0
+shader = ExtResource("4_53waj")
+shader_parameter/render_texture = SubResource("Texture2DRD_neu03")
+
+[node name="splat_renderer" type="Node"]
+script = ExtResource("1_o4jym")
+
+[node name="RenderedImage" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+extra_cull_margin = 16384.0
+gi_mode = 0
+mesh = SubResource("QuadMesh_ugp31")
+surface_material_override/0 = SubResource("ShaderMaterial_may5e")
+metadata/_edit_lock_ = true
+
+[node name="PauseTimer" type="Timer" parent="."]
+editor_description = "Determines when, after no camera movement, should rendering pause to save on resources."
+wait_time = 2.0
+one_shot = true
+
+[node name="UpdateDebugTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[node name="LoadingBar" type="ColorRect" parent="."]
+offset_right = 2560.0
+offset_bottom = 5.0
+color = Color(1, 1, 1, 0)
+script = ExtResource("5_1a6uf")
+metadata/_edit_use_anchors_ = true

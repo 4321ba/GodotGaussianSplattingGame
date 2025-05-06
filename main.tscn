@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dx4r13gqfh13"]
+[gd_scene load_steps=21 format=3 uid="uid://84lag8bsdnpi"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_skarq"]
 [ext_resource type="Shader" path="res://resources/shaders/spatial/main.gdshader" id="3_jj7ax"]
@@ -25,12 +25,12 @@ grow_amount = 0.1
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="Texture2DRD" id="Texture2DRD_0jyr8"]
+[sub_resource type="Texture2DRD" id="Texture2DRD_gp0su"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_may5e"]
 render_priority = 0
 shader = ExtResource("3_jj7ax")
-shader_parameter/render_texture = SubResource("Texture2DRD_0jyr8")
+shader_parameter/render_texture = SubResource("Texture2DRD_gp0su")
 
 [sub_resource type="Curve3D" id="Curve3D_3xwfn"]
 _data = {
@@ -102,13 +102,14 @@ offset_right = 2560.0
 offset_bottom = 5.0
 color = Color(1, 1, 1, 0)
 script = ExtResource("5_35jmb")
+metadata/_edit_use_anchors_ = true
 
 [node name="BonsaiPath" type="Path3D" parent="."]
 curve = SubResource("Curve3D_3xwfn")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="BonsaiPath"]
-transform = Transform3D(-0.0704969, 0.00438334, 0.997403, 0.118366, 0.992847, 0.00400275, -0.990363, 0.118351, -0.0705196, 1.4353, 1.13713, 2.02285)
-progress = 10.5932
+transform = Transform3D(-0.363101, -0.552635, 0.750023, 0.184296, 0.746451, 0.639236, -0.913223, 0.37037, -0.169209, 0.533898, 0.674662, 2.14433)
+progress = 11.6313
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="BonsaiPath/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
