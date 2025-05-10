@@ -160,6 +160,11 @@ func reset_render_texture() -> void:
 	rasterizer.texture_size = viewport.size
 	material.set_shader_parameter('render_texture', rasterizer.render_texture)
 
+func _physics_process(delta: float) -> void:
+	
+	#temp
+	$BonsaiPath/PathFollow3D.progress_ratio+=delta/5
+
 func _process(delta: float) -> void:
 	if not Engine.is_editor_hint():
 		if should_render_imgui:
@@ -170,6 +175,7 @@ func _process(delta: float) -> void:
 	var has_camera_updated := rasterizer.update_camera_matrices()
 	if not rasterizer.is_loaded or has_camera_updated: 
 		$PauseTimer.start()
+	
 	
 	var splat_transforms : Array[Transform3D] = []
 	for m in splat_meshes:

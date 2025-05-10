@@ -25,7 +25,6 @@ ImGuiRoot="*res://addons/imgui-godot/data/ImGuiRoot.tscn"
 
 window/size/viewport_width=1024
 window/size/viewport_height=600
-window/vsync/vsync_mode=3
 
 [editor_plugins]
 

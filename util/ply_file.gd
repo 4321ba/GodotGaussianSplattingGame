@@ -3,7 +3,7 @@ class_name PlyFile extends Resource
 var size : int
 var vertices : PackedFloat32Array
 var properties : Array[StringName]
-var split : Array[int]
+var split : Array[int] # indices where new objects start
 
 func _init(path:='') -> void:
 	split = []
@@ -34,7 +34,10 @@ static func merge(pc1 : PlyFile, pc2 : PlyFile) -> PlyFile:
 	merged.properties = pc1.properties
 	merged.vertices = PackedFloat32Array(pc1.vertices)
 	merged.vertices.append_array(pc2.vertices)
+	merged.split.append_array(pc1.split)
 	merged.split.append(pc1.vertices.size())
+	for s in pc2.split:
+		merged.split.append(s + pc1.vertices.size())
 	return merged
 
 static func load_gaussian_splats(point_cloud : PlyFile, stride : int, device : RenderingDevice, buffer : RID, should_terminate_reference : Array[bool], num_points_loaded : Array[int], callback : Callable):
