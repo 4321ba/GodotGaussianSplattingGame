@@ -212,8 +212,8 @@ void main() {
 	//data.pos_z = splat_pos.z;
 	//data.pos_z = view_pos.z;
 	//data.pos_z = clip_pos.z;// / clip_pos.w;
-	//data.pos_z = (ndc_pos.z + 1.0)*0.5; // 0..1 or -1..1 ??
-	data.pos_z = ndc_pos.z;
+	data.pos_z = (ndc_pos.z + 1.0)*0.5; // 0..1 or -1..1 ??
+	//data.pos_z = ndc_pos.z;
 	//data.pos_z = 0.5;
 	
 	//if (ndc_pos.z > 1.0 || ndc_pos.z < 0.1)
