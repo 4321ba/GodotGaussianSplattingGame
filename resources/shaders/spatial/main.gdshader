@@ -16,5 +16,6 @@ void vertex() {
 
 void fragment() {
 	ALBEDO = srgb_to_linear(texture(render_texture, SCREEN_UV).rgb);
+	//DEPTH = 0.9;
 	DEPTH = texture(render_texture, SCREEN_UV).a;//0.00000001;
 }

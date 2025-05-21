@@ -25,12 +25,12 @@ grow_amount = 0.1
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="Texture2DRD" id="Texture2DRD_sad3x"]
+[sub_resource type="Texture2DRD" id="Texture2DRD_a6rcp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_may5e"]
 render_priority = 0
 shader = ExtResource("3_jj7ax")
-shader_parameter/render_texture = SubResource("Texture2DRD_sad3x")
+shader_parameter/render_texture = SubResource("Texture2DRD_a6rcp")
 
 [sub_resource type="Curve3D" id="Curve3D_3xwfn"]
 _data = {
@@ -108,8 +108,8 @@ metadata/_edit_use_anchors_ = true
 curve = SubResource("Curve3D_3xwfn")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="BonsaiPath"]
-transform = Transform3D(0.0730223, 0.0806487, 0.993953, -0.763161, 0.646016, 0.00364874, -0.641891, -0.758891, 0.108735, 1.10341, -0.999028, 1.00464)
-progress = 5.7129
+transform = Transform3D(0.6604, 0.510455, 0.550525, -0.740383, 0.3213, 0.590231, 0.124418, -0.797469, 0.590191, 1.4498, 0.0682388, 3.06831)
+progress = 3.0465
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="BonsaiPath/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
@@ -121,7 +121,7 @@ mesh = SubResource("CapsuleMesh_ipik3")
 
 [node name="SplatMesh" type="Node3D" parent="BonsaiPath/PathFollow3D"]
 script = ExtResource("6_bb1q7")
-ply_file = "res://resources/demo_centered.ply"
+ply_file = "res://resources/buggy.ply"
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
@@ -139,6 +139,10 @@ shape = SubResource("BoxShape3D_3dst4")
 [node name="CollisionShape3D4" type="CollisionShape3D" parent="StaticBody3D"]
 transform = Transform3D(0.981511, 0, 0.191409, 0, 1, 0, -0.191409, 0, 0.98151, 3.70286, 0.300184, 4.72887)
 shape = SubResource("BoxShape3D_qpdcm")
+
+[node name="SplatMesh" type="Node3D" parent="StaticBody3D"]
+script = ExtResource("6_bb1q7")
+ply_file = "res://resources/train.ply"
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)

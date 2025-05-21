@@ -5,6 +5,14 @@ var vertices : PackedFloat32Array
 var properties : Array[StringName]
 var split : Array[int] # indices where new objects start
 
+const DEFAULT_PROPERTIES : Array[StringName] = [&"x", &"y", &"z", &"nx", &"ny", &"nz", &"f_dc_0", &"f_dc_1", &"f_dc_2", &"f_rest_0", &"f_rest_1", 
+&"f_rest_2", &"f_rest_3", &"f_rest_4", &"f_rest_5", &"f_rest_6", &"f_rest_7", &"f_rest_8", &"f_rest_9", &"f_rest_10", &"f_rest_11", 
+&"f_rest_12", &"f_rest_13", &"f_rest_14", &"f_rest_15", &"f_rest_16", &"f_rest_17", &"f_rest_18", &"f_rest_19", &"f_rest_20", &"f_rest_21", 
+&"f_rest_22", &"f_rest_23", &"f_rest_24", &"f_rest_25", &"f_rest_26", &"f_rest_27", &"f_rest_28", &"f_rest_29", &"f_rest_30", &"f_rest_31", 
+&"f_rest_32", &"f_rest_33", &"f_rest_34", &"f_rest_35", &"f_rest_36", &"f_rest_37", &"f_rest_38", &"f_rest_39", &"f_rest_40", &"f_rest_41", 
+&"f_rest_42", &"f_rest_43", &"f_rest_44", &"opacity", &"scale_0", &"scale_1", &"scale_2", &"rot_0", &"rot_1", &"rot_2", &"rot_3"]
+const DEFAULT_PROP_CNT = len(DEFAULT_PROPERTIES)
+
 func _init(path:='') -> void:
 	split = []
 	if not path.is_empty(): parse(path)
@@ -19,6 +27,17 @@ func parse(path : String) -> void:
 			'element':  size = int(line[2])
 			'property': properties.push_back(line[2])
 	vertices = file.get_buffer(size*len(properties) * 4).to_float32_array()
+	if properties.hash() != DEFAULT_PROPERTIES.hash():
+		var prop_inverse := {}
+		for i in properties.size():
+			prop_inverse[properties[i]] = i
+		var new_vertices := PackedFloat32Array()
+		new_vertices.resize(size*DEFAULT_PROP_CNT)
+		for i in size:
+			for pi in DEFAULT_PROP_CNT:
+				new_vertices[i * DEFAULT_PROP_CNT + pi] = vertices[i * len(properties) + prop_inverse[DEFAULT_PROPERTIES[pi]]] if DEFAULT_PROPERTIES[pi] in prop_inverse else 0
+		properties = DEFAULT_PROPERTIES.duplicate()
+		vertices = new_vertices
 	
 func get_vertex(index : int) -> Dictionary:
 	var start_index := len(properties) * index
@@ -62,6 +81,7 @@ static func load_gaussian_splats(point_cloud : PlyFile, stride : int, device : R
 			
 			### 3D Covariance (precomputed) ###
 			var scale := Basis.from_scale(Vector3(exp(p[v+0+55]), exp(p[v+1+55]), exp(p[v+2+55])))
+
 			var rotation := Basis(Quaternion(p[v+1+58], p[v+2+58], p[v+3+58], p[v+0+58])).transposed()
 			var cov_3d := (scale * rotation).transposed() * (scale * rotation)
 			

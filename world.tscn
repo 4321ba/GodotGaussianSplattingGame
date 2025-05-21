@@ -16,12 +16,12 @@
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="Texture2DRD" id="Texture2DRD_0hx2o"]
+[sub_resource type="Texture2DRD" id="Texture2DRD_b8l2e"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_may5e"]
 render_priority = 0
 shader = ExtResource("2_1cr0v")
-shader_parameter/render_texture = SubResource("Texture2DRD_0hx2o")
+shader_parameter/render_texture = SubResource("Texture2DRD_b8l2e")
 
 [sub_resource type="Curve3D" id="Curve3D_djmpf"]
 _data = {
@@ -111,9 +111,14 @@ far = 10000.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 0)
 curve = SubResource("Curve3D_djmpf")
 
+[node name="SplatMesh" type="Node3D" parent="BonsaiPath"]
+transform = Transform3D(-0.818468, -0.569468, -0.0739602, -0.568882, 0.82163, -0.0308446, 0.0783452, 0.0168318, -0.996628, 1.25598, 0.821236, 13.5594)
+script = ExtResource("11_stidh")
+ply_file = "res://resources/demo_centered.ply"
+
 [node name="PathFollow3D" type="PathFollow3D" parent="BonsaiPath"]
-transform = Transform3D(-0.431346, -0.901364, -0.0340073, -0.901991, 0.43123, 0.011096, 0.00466412, 0.0354659, -0.999211, 2.10612, 0.991621, 28.9558)
-progress = 26.137
+transform = Transform3D(0.937407, 0.347732, -0.00220738, -0.347546, 0.937108, 0.0268163, 0.0113951, -0.024375, 0.999472, 1.46154, -0.655846, 18.2792)
+progress = 52.267
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="BonsaiPath/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
@@ -123,9 +128,9 @@ mesh = SubResource("CapsuleMesh_ggk7o")
 transform = Transform3D(-2.18556e-08, -0.999995, 0, 0.499998, -4.37112e-08, 0, 0, 0, 0.500004, 0, 0, 0)
 mesh = SubResource("CapsuleMesh_togec")
 
-[node name="SplatMesh" type="Node3D" parent="BonsaiPath/PathFollow3D"]
-script = ExtResource("11_stidh")
-ply_file = "res://resources/demo_centered.ply"
-
 [node name="Camera3D" type="Camera3D" parent="BonsaiPath/PathFollow3D"]
 transform = Transform3D(0.941292, -0.337454, 0.0097229, 0.309935, 0.875229, 0.371368, -0.133829, -0.346552, 0.928435, -1.801, 2.587, 8.689)
+
+[node name="SplatMesh" type="Node3D" parent="BonsaiPath/PathFollow3D"]
+script = ExtResource("11_stidh")
+ply_file = "res://resources/buggy.ply"

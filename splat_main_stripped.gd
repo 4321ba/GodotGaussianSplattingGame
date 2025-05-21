@@ -42,7 +42,7 @@ func _ready() -> void:
 
 # source: https://forum.godotengine.org/t/how-do-you-get-all-nodes-of-a-certain-class/9143
 func find_by_method(node: Node, method_name : StringName, result : Array) -> void:
-	if node.has_method(method_name) :
+	if node.has_method(method_name) and node.is_visible_in_tree():
 		result.push_back(node)
 	for child in node.get_children():
 		find_by_method(child, method_name, result)
