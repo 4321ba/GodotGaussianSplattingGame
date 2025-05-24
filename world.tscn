@@ -16,12 +16,12 @@
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="Texture2DRD" id="Texture2DRD_b8l2e"]
+[sub_resource type="Texture2DRD" id="Texture2DRD_racgd"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_may5e"]
 render_priority = 0
 shader = ExtResource("2_1cr0v")
-shader_parameter/render_texture = SubResource("Texture2DRD_b8l2e")
+shader_parameter/render_texture = SubResource("Texture2DRD_racgd")
 
 [sub_resource type="Curve3D" id="Curve3D_djmpf"]
 _data = {
@@ -117,8 +117,8 @@ script = ExtResource("11_stidh")
 ply_file = "res://resources/demo_centered.ply"
 
 [node name="PathFollow3D" type="PathFollow3D" parent="BonsaiPath"]
-transform = Transform3D(0.937407, 0.347732, -0.00220738, -0.347546, 0.937108, 0.0268163, 0.0113951, -0.024375, 0.999472, 1.46154, -0.655846, 18.2792)
-progress = 52.267
+transform = Transform3D(-0.853412, -0.514713, -0.0801895, -0.513436, 0.857121, -0.0373981, 0.0879959, 0.00925772, -0.995913, 1.1057, 0.754836, 11.614)
+progress = 8.76205
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="BonsaiPath/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)

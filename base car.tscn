@@ -246,12 +246,13 @@ shape = SubResource("12")
 
 [node name="carmesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(-100, 1.50996e-05, 6.60024e-13, 0, -4.37114e-06, 100, 1.50996e-05, 100, 4.37114e-06, 0, -1.50209, 0)
+visible = false
 mesh = SubResource("10")
 
-[node name="SplatMesh" type="Node3D" parent="carmesh"]
-transform = Transform3D(0.03, -2.08167e-22, -1.9072e-09, -1.9072e-09, -1.31134e-09, -0.03, -8.33664e-17, 0.03, -1.31134e-09, -1.96295e-09, -0.013, 0.0150209)
+[node name="SplatMesh" type="Node3D" parent="."]
+transform = Transform3D(-0.087252, 0.00152299, -9.99962, 0.174524, 9.99848, 0, 9.9981, -0.174517, -0.0872653, 0.03, -2.2, 0)
 script = ExtResource("4_5up5e")
-ply_file = "res://resources/truck_cut_2.ply"
+ply_file = "res://resources/toyota_wotire.ply"
 
 [node name="fr" parent="." instance=ExtResource("1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0.2, 3.8)
@@ -267,8 +268,14 @@ B_Bias = 0.8
 
 [node name="Cylinder2" type="MeshInstance3D" parent="fr/animation/camber/wheel" index="0"]
 transform = Transform3D(101.962, 0, 0, 0, 101.962, 0, 0, 0, 101.962, 0, 0, 0)
+visible = false
 mesh = SubResource("11")
 skeleton = NodePath("../../../../..")
+
+[node name="SplatMesh" type="Node3D" parent="fr/animation/camber/wheel" index="1"]
+transform = Transform3D(-4.10887e-07, 0, 9.4, 0, 9.4, 0, -9.4, 0, -4.10887e-07, 0, 0, 0)
+script = ExtResource("4_5up5e")
+ply_file = "res://resources/toyota_tire.ply"
 
 [node name="fl" parent="." instance=ExtResource("1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.2, 3.8)
@@ -284,8 +291,14 @@ B_Bias = 0.8
 
 [node name="Cylinder2" type="MeshInstance3D" parent="fl/animation/camber/wheel" index="0"]
 transform = Transform3D(-101.962, 0, -8.9138e-06, 0, 101.962, 0, 8.9138e-06, 0, -101.962, 0, 0, 0)
+visible = false
 mesh = SubResource("11")
 skeleton = NodePath("../../../../..")
+
+[node name="SplatMesh" type="Node3D" parent="fl/animation/camber/wheel" index="1"]
+transform = Transform3D(-4.10887e-07, 0, -9.4, 0, 9.4, 0, 9.4, 0, -4.10887e-07, 0, 0, 0)
+script = ExtResource("4_5up5e")
+ply_file = "res://resources/toyota_tire.ply"
 
 [node name="rr" parent="." instance=ExtResource("1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0.2, -3.8)
@@ -297,8 +310,14 @@ HB_Bias = 1.0
 
 [node name="Cylinder2" type="MeshInstance3D" parent="rr/animation/camber/wheel" index="0"]
 transform = Transform3D(101.962, 0, 0, 0, 101.962, 0, 0, 0, 101.962, 0, 0, 0)
+visible = false
 mesh = SubResource("11")
 skeleton = NodePath("../../../../..")
+
+[node name="SplatMesh" type="Node3D" parent="rr/animation/camber/wheel" index="1"]
+transform = Transform3D(-4.10887e-07, 0, 9.4, 0, 9.4, 0, -9.4, 0, -4.10887e-07, 0, 0, 0)
+script = ExtResource("4_5up5e")
+ply_file = "res://resources/toyota_tire.ply"
 
 [node name="rl" parent="." instance=ExtResource("1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.2, -3.8)
@@ -310,8 +329,14 @@ HB_Bias = 1.0
 
 [node name="Cylinder2" type="MeshInstance3D" parent="rl/animation/camber/wheel" index="0"]
 transform = Transform3D(-101.962, 0, -8.9138e-06, 0, 101.962, 0, 8.9138e-06, 0, -101.962, 0, 0, 0)
+visible = false
 mesh = SubResource("11")
 skeleton = NodePath("../../../../..")
+
+[node name="SplatMesh" type="Node3D" parent="rl/animation/camber/wheel" index="1"]
+transform = Transform3D(-4.10887e-07, 0, -9.4, 0, 9.4, 0, 9.4, 0, -4.10887e-07, 0, 0, 0)
+script = ExtResource("4_5up5e")
+ply_file = "res://resources/toyota_tire.ply"
 
 [node name="other_sounds" parent="." instance=ExtResource("6")]
 exhaust_particles = Array[NodePath]([NodePath("../fire")])
