@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cl5riv3giscom"]
+[gd_scene load_steps=19 format=3 uid="uid://cl5riv3giscom"]
 
 [ext_resource type="PackedScene" uid="uid://crtwme8ggggra" path="res://base car.tscn" id="1"]
 [ext_resource type="Script" path="res://splat_main_stripped.gd" id="1_wbn8b"]
@@ -16,12 +16,15 @@
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="Texture2DRD" id="Texture2DRD_0xlum"]
+[sub_resource type="Texture2DRD" id="Texture2DRD_vdwiw"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_may5e"]
 render_priority = 0
 shader = ExtResource("2_1cr0v")
-shader_parameter/render_texture = SubResource("Texture2DRD_0xlum")
+shader_parameter/render_texture = SubResource("Texture2DRD_vdwiw")
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ixwt8"]
+points = PackedVector3Array(-2.5, 0, -2.5, -2.5, 0, 2.5, 2.5, 0, -2.5, 2.5, 0, 2.5, 0, 4, 0)
 
 [sub_resource type="Curve3D" id="Curve3D_djmpf"]
 _data = {
@@ -113,6 +116,17 @@ Debug_Mode = false
 
 [node name="Morning_env" parent="world" instance=ExtResource("7_n8evn")]
 
+[node name="RigidBody3D" type="RigidBody3D" parent="world"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 30)
+
+[node name="SplatMesh" type="Node3D" parent="world/RigidBody3D"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+script = ExtResource("11_stidh")
+ply_file = "res://resources/teddy.ply"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="world/RigidBody3D"]
+shape = SubResource("ConvexPolygonShape3D_ixwt8")
+
 [node name="BonsaiPath" type="Path3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 0)
 visible = false
@@ -124,8 +138,8 @@ script = ExtResource("11_stidh")
 ply_file = "res://resources/demo_centered.ply"
 
 [node name="PathFollow3D" type="PathFollow3D" parent="BonsaiPath"]
-transform = Transform3D(0.765043, 0.643637, 0.0101137, -0.643702, 0.764827, 0.0186639, 0.00427825, -0.0207923, 0.999612, 1.44714, -0.885198, 8.05014)
-progress = 62.4985
+transform = Transform3D(0.988037, 0.153098, 0.000860744, -0.153034, 0.987431, 0.034979, 0.004506, -0.0346979, 0.99923, 1.45415, -0.472991, 24.2657)
+progress = 46.2777
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="BonsaiPath/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
