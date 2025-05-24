@@ -28,6 +28,9 @@
 
 #define DECODE_COVARIANCE(c) (mat3(c[0], c[1], c[2], c[1], c[3], c[4], c[2], c[4], c[5]))
 
+// same as in gaussian_splatting_rasterizer.gd
+#define MAX_OBJECT_COUNT 16
+
 layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
 
 struct Splat {
@@ -80,7 +83,7 @@ layout (std140, set = 0, binding = 6) restrict uniform Uniforms {
 };
 
 layout (std140, set = 0, binding = 7) restrict uniform Transforms {
-	mat4 transforms[8];
+	mat4 transforms[MAX_OBJECT_COUNT];
 };
 
 layout(push_constant) restrict readonly uniform PushConstants {

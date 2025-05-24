@@ -16,12 +16,12 @@
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="Texture2DRD" id="Texture2DRD_racgd"]
+[sub_resource type="Texture2DRD" id="Texture2DRD_0xlum"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_may5e"]
 render_priority = 0
 shader = ExtResource("2_1cr0v")
-shader_parameter/render_texture = SubResource("Texture2DRD_racgd")
+shader_parameter/render_texture = SubResource("Texture2DRD_0xlum")
 
 [sub_resource type="Curve3D" id="Curve3D_djmpf"]
 _data = {
@@ -103,12 +103,19 @@ far = 10000.0
 
 [node name="test scene" parent="world" instance=ExtResource("6")]
 
+[node name="car2" parent="world" instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 0)
+Debug_Mode = false
+UseMouseSteering = true
+
 [node name="car" parent="world" instance=ExtResource("1")]
+Debug_Mode = false
 
 [node name="Morning_env" parent="world" instance=ExtResource("7_n8evn")]
 
 [node name="BonsaiPath" type="Path3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 0)
+visible = false
 curve = SubResource("Curve3D_djmpf")
 
 [node name="SplatMesh" type="Node3D" parent="BonsaiPath"]
@@ -117,8 +124,8 @@ script = ExtResource("11_stidh")
 ply_file = "res://resources/demo_centered.ply"
 
 [node name="PathFollow3D" type="PathFollow3D" parent="BonsaiPath"]
-transform = Transform3D(-0.853412, -0.514713, -0.0801895, -0.513436, 0.857121, -0.0373981, 0.0879959, 0.00925772, -0.995913, 1.1057, 0.754836, 11.614)
-progress = 8.76205
+transform = Transform3D(0.765043, 0.643637, 0.0101137, -0.643702, 0.764827, 0.0186639, 0.00427825, -0.0207923, 0.999612, 1.44714, -0.885198, 8.05014)
+progress = 62.4985
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="BonsaiPath/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)

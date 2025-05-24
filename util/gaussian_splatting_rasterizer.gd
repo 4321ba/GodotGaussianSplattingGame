@@ -6,7 +6,7 @@ const WORKGROUP_SIZE := 512 # Same as defined in `radix_sort_upsweep.glsl`
 const RADIX := 256 # Same as defined in `radix_sort_upsweep.glsl`
 const PARTITION_DIVISION := 8 # Same as defined in `radix_sort_upsweep.glsl`
 const PARTITION_SIZE := PARTITION_DIVISION * WORKGROUP_SIZE # Same as defined in `radix_sort_upsweep.glsl`
-
+const MAX_OBJECT_COUNT := 16 # number of gsplat object transforms, same as in gsplat_projection.glsl
 signal loaded
 
 var context : RenderingContext
@@ -83,7 +83,7 @@ func init_gpu() -> void:
 	
 	descriptors['splats'] = context.create_storage_buffer(point_cloud.size * 60*4)
 	descriptors['uniforms'] = context.create_uniform_buffer(8*4)
-	descriptors['transforms'] = context.create_uniform_buffer(16*8*4)
+	descriptors['transforms'] = context.create_uniform_buffer(16*MAX_OBJECT_COUNT*4)
 	descriptors['culled_splats'] = context.create_storage_buffer(point_cloud.size * 12*4)
 	descriptors['grid_dimensions'] = context.create_storage_buffer(2*3*4, block_dims.to_byte_array(), RenderingDevice.STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT)
 	descriptors['histogram'] = context.create_storage_buffer(4 + (1 + 4*RADIX + num_partitions*RADIX)*4)
@@ -126,7 +126,7 @@ func rasterize() -> void:
 	
 	var camera_pos := basis_override * camera.global_position
 	context.device.buffer_update(descriptors['uniforms'].rid, 0, 8*4, RenderingContext.create_push_constant([-camera_pos.x, -camera_pos.y, camera_pos.z, model_scale[0], texture_size.x, texture_size.y, Time.get_ticks_msec()*1e-3]))
-	context.device.buffer_update(descriptors['transforms'].rid, 0, 16*8*4, get_transforms())
+	context.device.buffer_update(descriptors['transforms'].rid, 0, 16*MAX_OBJECT_COUNT*4, get_transforms())
 	context.device.buffer_clear(descriptors['histogram'].rid, 0, 4 + 4*RADIX*4) # Clear the sort buffer size and reset global histogram
 	context.device.buffer_clear(descriptors['tile_bounds'].rid, 0, tile_dims.x*tile_dims.y * 2*4) # Clear gsplat_boundaries buffer
 	#context.device.buffer_update(descriptors['grid_dimensions'].rid, 0, 3*4*2, default_block_dims)
@@ -202,13 +202,13 @@ func update_object_transforms(transforms: Array[Transform3D]) -> void:
 
 func get_transforms() -> PackedByteArray:
 	var fbuf := PackedFloat32Array()
-	assert(len(object_transforms) <= 8)
+	assert(len(object_transforms) <= MAX_OBJECT_COUNT)
 	var t := []
 	for i in object_transforms:
 		t.append(Projection(i))
-	for i in (8 - len(object_transforms)):
+	for i in (MAX_OBJECT_COUNT - len(object_transforms)):
 		t.append(Projection.IDENTITY)
-	for i in 8:
+	for i in MAX_OBJECT_COUNT:
 		# I have no idea why the minus signs are needed, but they are needed for the intended transformation 
 		fbuf.append_array([	t[i].x[0], t[i].x[1], -t[i].x[2], -t[i].x[3],
 							t[i].y[0], t[i].y[1], -t[i].y[2], -t[i].y[3],

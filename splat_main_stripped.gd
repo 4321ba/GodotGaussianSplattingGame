@@ -26,7 +26,7 @@ func _init() -> void:
 
 func _ready() -> void:
 	find_by_method(self, StringName("is_splat_mesh"), splat_meshes)
-	assert(len(splat_meshes) <= 8)
+	assert(len(splat_meshes) <= GaussianSplattingRasterizer.MAX_OBJECT_COUNT)
 	var splat_filenames := []
 	for m in splat_meshes:
 		splat_filenames.append(m.ply_file)
