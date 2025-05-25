@@ -35,6 +35,8 @@ func _process(delta):
 		
 		
 	if not str(car) == "":
+		if (Input.is_action_just_pressed("toggle_debug_mode")):
+			visible = not visible
 		
 		$"fix engine".visible = get_node(car).rpm<get_node(car).DeadRPM
 		

@@ -16,12 +16,12 @@
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="Texture2DRD" id="Texture2DRD_vdwiw"]
+[sub_resource type="Texture2DRD" id="Texture2DRD_q7amd"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_may5e"]
 render_priority = 0
 shader = ExtResource("2_1cr0v")
-shader_parameter/render_texture = SubResource("Texture2DRD_vdwiw")
+shader_parameter/render_texture = SubResource("Texture2DRD_q7amd")
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ixwt8"]
 points = PackedVector3Array(-2.5, 0, -2.5, -2.5, 0, 2.5, 2.5, 0, -2.5, 2.5, 0, 2.5, 0, 4, 0)
@@ -68,6 +68,7 @@ metadata/_edit_use_anchors_ = true
 [node name="world" type="Node3D" parent="."]
 
 [node name="watermark" type="TextureRect" parent="world"]
+visible = false
 anchors_preset = -1
 anchor_top = 0.816666
 anchor_right = 0.199219
@@ -77,6 +78,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="author" type="Label" parent="world"]
+visible = false
 anchors_preset = -1
 anchor_top = 0.763333
 anchor_right = 0.214844
@@ -108,11 +110,9 @@ far = 10000.0
 
 [node name="car2" parent="world" instance=ExtResource("1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 0)
-Debug_Mode = false
 UseMouseSteering = true
 
 [node name="car" parent="world" instance=ExtResource("1")]
-Debug_Mode = false
 
 [node name="Morning_env" parent="world" instance=ExtResource("7_n8evn")]
 
@@ -138,8 +138,8 @@ script = ExtResource("11_stidh")
 ply_file = "res://resources/demo_centered.ply"
 
 [node name="PathFollow3D" type="PathFollow3D" parent="BonsaiPath"]
-transform = Transform3D(0.988037, 0.153098, 0.000860744, -0.153034, 0.987431, 0.034979, 0.004506, -0.0346979, 0.99923, 1.45415, -0.472991, 24.2657)
-progress = 46.2777
+transform = Transform3D(0.980679, 0.194772, -0.00036755, -0.194654, 0.980156, 0.0328559, 0.00676071, -0.0321548, 0.999303, 1.45388, -0.515713, 23.006)
+progress = 47.5359
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="BonsaiPath/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
