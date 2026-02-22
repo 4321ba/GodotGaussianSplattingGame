@@ -1,3 +1,9 @@
+# GodotGaussianSplattingGame
+
+This project is for a university project laboratory. The goal is to make GodotGaussianSplatting more integrated into the editor: be able to move multiple objects around, as we are able to do with regular meshes. For documentation, and a car racing project integrated, see [this](https://github.com/4321ba/GodotGaussianSplattingGame/tree/vitavehicle) branch. For the master thesis project, that is a more flexible Godot addon based on these projects, see [this](https://github.com/4321ba/GodotGaussianSplattingNodes) repository.
+
+Below is the original GodotGaussianSplatting readme.
+
 # GodotGaussianSplatting
 A toy 3D Gaussian splatting viewer in the Godot Engine based on the paper ["3D Gaussian Splatting for Real-Time Radiance Field Rendering"](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/). The viewing engine allows loading `.ply` files containing Gaussian splatting data. Seemless switching between orbit and free-look camera modes allow for intuitive scene navigation.
 
